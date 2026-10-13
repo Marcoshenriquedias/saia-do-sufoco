@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Antes e Depois</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@700;800;900&display=block" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+:root{--green-900:#06190f;--green-800:#0b2b1c;--green-700:#12402a;--gold:#d9b24c;--gold-light:#f3d987;--cream:#f6f1e3;--red:#d64533;--gray:#8d958f}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--green-900)}
+#root{position:relative;width:100%;height:100%;font-family:"Montserrat",sans-serif;color:var(--cream);
+ background:radial-gradient(120% 80% at 50% 35%,var(--green-700) 0%,var(--green-800) 45%,var(--green-900) 100%);overflow:hidden}
+.frame{position:absolute;inset:40px;border:3px solid rgba(217,178,76,.35);border-radius:28px;pointer-events:none}
+.clip{position:absolute;inset:0}
+.scene{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:0 90px;text-align:center}
+.anton{font-family:"Anton","Montserrat",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+.gold{color:var(--gold)}
+.goldl{color:var(--gold-light)}
+/* gancho */
+#hook{padding-top:200px}
+#hook .pill{font-weight:900;font-size:44px;letter-spacing:.16em;color:var(--green-900);background:var(--gold);
+ padding:14px 34px;border-radius:999px;margin-bottom:46px;display:flex;align-items:center;gap:14px}
+#hook .pill.red{background:var(--red);color:var(--cream)}
+#hook .h{line-height:1.13;color:var(--cream);text-shadow:0 8px 0 rgba(0,0,0,.35)}
+#hook .w{display:inline-block}
+#hook .w.hl{color:var(--gold)}
+#flash{position:absolute;inset:0;background:var(--cream);opacity:0;pointer-events:none}
+/* CTA */
+#cta{padding-top:230px}
+#cta .lead{font-size:120px;line-height:1}
+#cta .word{margin:44px 0;line-height:1;color:var(--green-900);background:var(--gold);padding:30px 64px 20px;border-radius:34px;
+ box-shadow:0 0 0 10px rgba(217,178,76,.25),0 20px 60px rgba(0,0,0,.5);white-space:nowrap}
+#cta .tail{font-weight:900;font-size:72px;line-height:1.12;color:var(--cream)}
+#cta .bubble{align-self:flex-end;margin:60px 60px 0 0;width:150px;height:150px}
+/* cowboy */
+#cowboy-layer{pointer-events:none}
+#cowboy{position:absolute;left:20px;bottom:-50px;width:560px;height:646px;overflow:visible}
+.say{position:absolute;left:600px;top:1390px;max-width:420px;background:var(--cream);color:var(--green-900);font-weight:900;
+ font-size:50px;line-height:1.08;padding:26px 34px;border-radius:34px;border:5px solid var(--gold);
+ box-shadow:0 14px 34px rgba(0,0,0,.45);transform-origin:10% 100%}
+.say::after{content:"";position:absolute;left:30px;bottom:-40px;border-width:40px 34px 0 0;border-style:solid;
+ border-color:var(--gold) transparent transparent transparent}
+/* progresso */
+#progress{position:absolute;left:90px;right:90px;top:auto;bottom:70px;height:12px;border-radius:8px;background:rgba(246,241,227,.12);overflow:hidden}
+#progress .fill{width:100%;height:100%;background:var(--gold);transform-origin:left center}
+
+#body{padding-top:150px}
+.vs-title{font-size:84px;line-height:1.1;margin-bottom:50px}
+.split{position:relative;width:100%;display:flex;gap:40px;justify-content:space-between}
+.panel{position:relative;width:430px;height:780px;border-radius:30px;padding:36px 30px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.panel .tag{font-size:96px;line-height:1}
+.panel .art{position:relative;margin:30px 0 70px;height:300px;display:flex;align-items:center;justify-content:center}
+.panel .txt{font-weight:900;font-size:46px;line-height:1.14}
+.before{background:rgba(141,149,143,.12);border:4px solid rgba(141,149,143,.55)}
+.before .tag{color:#a7aea9}
+.before .txt{color:#b9beb9}
+.before .txt b{color:#e7e9e6}
+.lockb{position:absolute;right:-6px;top:-6px;width:96px;height:96px;border-radius:50%;background:#5b625d;display:flex;align-items:center;justify-content:center;border:4px solid #8d958f}
+.penh{position:absolute;bottom:-46px;left:50%;margin-left:-170px;width:340px;font-size:60px;color:var(--red);border:7px solid var(--red);border-radius:14px;
+ padding:4px 0 0;transform:rotate(-12deg);background:rgba(6,25,15,.75)}
+.after{background:linear-gradient(180deg,rgba(217,178,76,.22),rgba(18,64,42,.6));border:4px solid var(--gold);box-shadow:0 0 50px rgba(217,178,76,.25)}
+.after .tag{color:var(--gold)}
+.after .txt b{color:var(--gold-light)}
+.glow{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(243,217,135,.55),rgba(243,217,135,0) 65%)}
+.shieldic{position:relative}
+.susp{position:absolute;bottom:-46px;left:50%;margin-left:-185px;width:370px;font-size:46px;white-space:nowrap;color:var(--green-900);background:var(--gold);border-radius:14px;padding:8px 0 4px;transform:rotate(-4deg)}
+.arrow{position:absolute;left:50%;top:250px;margin-left:-55px;width:110px;height:110px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;
+ box-shadow:0 0 0 10px rgba(6,25,15,.9);z-index:2}
+.result{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;align-items:center}
+.rays{position:absolute;top:-60px;width:760px;height:760px;border-radius:50%;
+ background:repeating-conic-gradient(rgba(217,178,76,.16) 0deg 10deg,rgba(217,178,76,0) 10deg 20deg);
+ -webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%)}
+.bigshield{position:relative;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
+.r1{position:relative;font-size:150px;line-height:1;margin-top:40px}
+.r2{position:relative;font-size:190px;line-height:1;color:var(--gold)}
+</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
+      <div class="frame"></div>
+      <section id="hook" class="clip scene" data-start="0" data-duration="2.3" data-track-index="0"><div class="pill red"><svg class="" width="44" height="44" viewBox="0 0 64 64" fill="none" stroke="#f6f1e3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6L60 56H4z"/><path d="M32 24v14M32 46v1"/></svg>ALERTA</div><div class="h anton" style="font-size:160px"><div class="hl-line"><span class="w">O</span> <span class="w hl">PERIGO</span> <span class="w">DA</span></div><div class="hl-line"><span class="w hl">EXECUÇÃO</span></div><div class="hl-line"><span class="w">BANCÁRIA</span></div><div class="hl-line"><span class="w">NA</span> <span class="w">FAZENDA</span></div></div></section>
+      <section id="body" class="clip scene" data-start="2.2" data-duration="9.4" data-track-index="1">
+<div class="vs-title anton">A situação do <span class="gold">produtor</span></div>
+<div class="split">
+  <div class="panel before" id="pA">
+    <div class="tag anton">Antes</div>
+    <div class="art"><svg class="" width="250" height="250" viewBox="0 0 64 64" fill="none" stroke="#8d958f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="44" r="12"/><circle cx="20" cy="44" r="4"/><circle cx="50" cy="48" r="8"/><path d="M10 34V22h20v12M14 22V10h14v12M30 32h24v10M46 32V20M32 46h10"/></svg>
+      <div class="lockb"><svg class="" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#f6f1e3" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="28" width="40" height="28" rx="5"/><path d="M20 28v-8a12 12 0 0 1 24 0v8M32 40v6"/></svg></div>
+      <div class="penh anton">Penhorado</div>
+    </div>
+    <div class="txt">Desespero com o <b>trator</b> e a <b>terra penhorada</b></div>
+  </div>
+  <div class="arrow" id="arr"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#06190f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  <div class="panel after" id="pB">
+    <div class="tag anton">Depois</div>
+    <div class="art"><div class="glow"></div><svg class="shieldic" width="250" height="250" viewBox="0 0 64 64" fill="none" stroke="#d9b24c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6l22 8v16c0 14-10 24-22 28C20 54 10 44 10 30V14z"/><path d="M22 32l7 7 13-14"/></svg>
+      <div class="susp anton">Execução suspensa</div>
+    </div>
+    <div class="txt">Defesa <b>blindada</b> e <b>suspensão</b> da execução</div>
+  </div>
+</div>
+<div class="result" id="res">
+  <div class="rays"></div>
+  <svg class="bigshield" width="400" height="440" viewBox="0 0 64 70">
+    <path d="M32 4l26 9v19c0 17-12 29-26 34C18 61 6 49 6 32V13z" fill="#d9b24c" stroke="#f3d987" stroke-width="2"/>
+    <path d="M32 10l20 7v15c0 13-9 23-20 27-11-4-20-14-20-27V17z" fill="#0b2b1c"/>
+    <path id="tick" d="M21 34l8 8 15-16" fill="none" stroke="#f3d987" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="r1 anton">Patrimônio</div>
+  <div class="r2 anton">Protegido</div>
+</div>
+</section>
+      <section id="cta" class="clip scene" data-start="11.5" data-duration="3.5" data-track-index="2"><div class="lead anton">Comenta</div><div class="word anton" style="font-size:168px">PROTEÇÃO</div><div class="tail">que eu te <span class="goldl">explico</span></div><svg class="bubble" viewBox="0 0 24 24" fill="none" stroke="#d9b24c" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z" /></svg></section>
+      <div id="cowboy-layer" class="clip" data-start="0" data-duration="15" data-track-index="4"><svg id="cowboy" viewBox="0 0 520 600" xmlns="http://www.w3.org/2000/svg">
+          <g id="cb-all">
+            <!-- braço esquerdo (repouso) -->
+            <path d="M92,455 C62,500 52,560 56,610 L118,610 C114,565 118,515 138,478 Z" fill="#a8472a" />
+            <!-- tronco / camisa -->
+            <path d="M60,610 C60,480 110,425 190,402 L330,402 C410,425 460,480 460,610 Z" fill="#b8532e" />
+            <!-- colete -->
+            <path d="M60,610 C60,490 98,438 172,410 L218,610 Z" fill="#4a2a14" />
+            <path d="M460,610 C460,490 422,438 348,410 L302,610 Z" fill="#4a2a14" />
+            <!-- estrela de xerife -->
+            <path
+              d="M128,470 l9,19 21,3 -15,15 4,21 -19,-10 -19,10 4,-21 -15,-15 21,-3 z"
+              fill="#d9b24c"
+              stroke="#8a6a1f"
+              stroke-width="2"
+            />
+            <!-- pescoço -->
+            <rect x="224" y="320" width="72" height="92" rx="20" fill="#d99868" />
+            <!-- lenço -->
+            <path d="M188,396 L332,396 L260,478 Z" fill="#c0392b" />
+            <circle cx="232" cy="398" r="14" fill="#a93226" />
+            <circle cx="288" cy="398" r="14" fill="#a93226" />
+
+            <!-- cabeça -->
+            <g id="cb-head">
+              <ellipse cx="173" cy="268" rx="19" ry="27" fill="#e2a678" />
+              <ellipse cx="347" cy="268" rx="19" ry="27" fill="#e2a678" />
+              <ellipse cx="260" cy="262" rx="88" ry="100" fill="#ebb487" />
+              <path d="M172,240 C164,128 356,128 348,240 C318,206 202,206 172,240 Z" fill="#4a2c16" />
+              <path d="M176,215 L190,215 L192,285 L178,280 Z" fill="#4a2c16" />
+              <path d="M344,215 L330,215 L328,285 L342,280 Z" fill="#4a2c16" />
+              <circle cx="206" cy="298" r="16" fill="#e8846b" opacity="0.4" />
+              <circle cx="314" cy="298" r="16" fill="#e8846b" opacity="0.4" />
+              <g id="brows-happy"><path d="M205,224 Q228,208 251,222" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" /><path d="M269,222 Q292,208 315,224" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" /></g><g id="brows-sad" opacity="0"><path d="M207,214 Q230,214 251,230" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" /><path d="M269,230 Q290,214 313,214" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" /></g><path id="sweat" d="M330,200 C322,214 318,222 318,230 A12,12 0 0 0 342,230 C342,222 338,214 330,200 Z" fill="#8fd3ff" opacity="0" />
+              <g id="cb-eyes">
+                <ellipse cx="229" cy="254" rx="11" ry="15" fill="#2b1a0e" />
+                <ellipse cx="291" cy="254" rx="11" ry="15" fill="#2b1a0e" />
+                <circle cx="233" cy="249" r="4" fill="#ffffff" />
+                <circle cx="295" cy="249" r="4" fill="#ffffff" />
+              </g>
+              <ellipse cx="260" cy="290" rx="17" ry="14" fill="#d48e5f" />
+              <path id="mouth-happy" d="M236,334 Q260,358 284,334 Z" fill="#7a2e1c" /><path id="mouth-sad" d="M238,346 Q260,326 282,346" stroke="#7a2e1c" stroke-width="7" fill="none" stroke-linecap="round" opacity="0" />
+              <path
+                d="M260,304 C236,294 204,302 188,330 C212,322 236,326 260,316 C284,326 308,322 332,330 C316,302 284,294 260,304 Z"
+                fill="#5a3418"
+              />
+            </g>
+
+            <!-- chapéu -->
+            <g id="cb-hat">
+              <path
+                d="M168,186 C162,126 172,66 202,50 C226,40 246,64 260,58 C274,64 294,40 318,50 C348,66 358,126 352,186 Z"
+                fill="#9c6631"
+              />
+              <path d="M206,60 C226,52 244,70 260,66 C276,70 294,52 314,60 C300,80 220,80 206,60 Z" fill="#7d4f24" />
+              <path d="M165,158 L355,158 L354,186 L166,186 Z" fill="#d9b24c" />
+              <path
+                d="M48,142 C62,196 160,214 260,214 C360,214 458,196 472,142 C446,174 364,186 260,186 C156,186 74,174 48,142 Z"
+                fill="#8b5a2b"
+              />
+            </g>
+
+            <!-- braço que aponta (gira no ombro 392,440) -->
+            <g id="cb-arm">
+              <rect x="372" y="410" width="160" height="62" rx="31" fill="#a8472a" />
+              <rect x="512" y="414" width="22" height="54" rx="8" fill="#4a2a14" />
+              <circle cx="560" cy="441" r="30" fill="#ebb487" />
+              <rect x="568" y="424" width="70" height="22" rx="11" fill="#ebb487" />
+              <ellipse cx="552" cy="416" rx="14" ry="10" fill="#e2a678" />
+            </g>
+          </g>
+        </svg><div class="say" id="say0">Ai, meu Deus... e agora?</div><div class="say" id="say1">Agora sim, sô!</div><div class="say" id="say2">Isso que é defesa!</div><div class="say" id="say3">Comenta aí, sô!</div></div>
+      <div id="progress" class="clip" data-start="0" data-duration="15" data-track-index="3"><div class="fill"></div></div>
+      <div id="flash" class="clip" data-start="0" data-duration="0.5" data-track-index="5"></div>
+    </div>
+    <script>
+const HOOK_STAGGER = 0.11;
+
+const tl = gsap.timeline({ paused: true });
+const SHOULDER = "392 440", HEAD = "260 300";
+tl.fromTo("#progress .fill", { scaleX: 0 }, { scaleX: 1, duration: 15, ease: "none" }, 0);
+
+// gancho: palavras batendo + flash + tremida
+tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+tl.fromTo("#hook .pill", { opacity: 0, y: -60, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.28, ease: "back.out(2.5)" }, 0);
+tl.fromTo("#hook .w", { opacity: 0, scale: 2.4, y: -20 }, { opacity: 1, scale: 1, y: 0, duration: 0.2, stagger: HOOK_STAGGER, ease: "power4.out" }, 0.08);
+const HOOK_END = 0.08 + HOOK_STAGGER * (document.querySelectorAll("#hook .w").length - 1) + 0.2;
+tl.to("#hook .h", { x: 14, duration: 0.04, ease: "none" }, HOOK_END);
+tl.to("#hook .h", { x: -12, duration: 0.05, ease: "none" }, HOOK_END + 0.04);
+tl.to("#hook .h", { x: 6, duration: 0.05, ease: "none" }, HOOK_END + 0.09);
+tl.to("#hook .h", { x: 0, duration: 0.05, ease: "none" }, HOOK_END + 0.14);
+tl.to("#hook .h .hl", { scale: 1.08, duration: 0.5, ease: "sine.inOut" }, HOOK_END + 0.2);
+tl.to("#hook", { opacity: 0, scale: 0.9, duration: 0.18, ease: "power2.in" }, 2.08);
+
+// cowboy
+tl.fromTo("#cowboy", { y: 700 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.75);
+tl.fromTo("#cb-arm", { rotation: 85, svgOrigin: SHOULDER }, { rotation: 85, svgOrigin: SHOULDER, duration: 0.01 }, 0);
+tl.fromTo("#cb-all", { y: 0 }, { y: -8, duration: 0.6, repeat: 22, yoyo: true, ease: "sine.inOut" }, 1.2);
+[1.9, 4.6, 7.2, 9.9, 13.1].forEach((t) => {
+  tl.to("#cb-eyes", { scaleY: 0.1, svgOrigin: "260 254", duration: 0.06, ease: "none" }, t);
+  tl.to("#cb-eyes", { scaleY: 1, svgOrigin: "260 254", duration: 0.08, ease: "none" }, t + 0.06);
+});
+function point(t, a) {
+  tl.to("#cb-arm", { rotation: a, svgOrigin: SHOULDER, duration: 0.3, ease: "back.out(2)" }, t);
+  tl.to("#cb-arm", { rotation: a - 5, svgOrigin: SHOULDER, duration: 0.1, ease: "power1.out" }, t + 0.35);
+  tl.to("#cb-arm", { rotation: a, svgOrigin: SHOULDER, duration: 0.15, ease: "power1.in" }, t + 0.45);
+}
+function armDown(t) { tl.to("#cb-arm", { rotation: 85, svgOrigin: SHOULDER, duration: 0.25, ease: "power2.in" }, t); }
+function shakeNo(t) {
+  [9, -9, 7, -4, 0].forEach((r, i) => tl.to("#cb-head", { rotation: r, svgOrigin: HEAD, duration: 0.12, ease: "sine.inOut" }, t + i * 0.12));
+}
+function nodYes(t) {
+  [12, 0, 10, 0].forEach((y, i) => tl.to("#cb-head", { y: y, duration: 0.12, ease: "sine.inOut" }, t + i * 0.12));
+}
+function mood(t, m) {
+  const sad = m === "sad" ? 1 : 0;
+  tl.to("#mouth-sad", { opacity: sad, duration: 0.1 }, t);
+  tl.to("#brows-sad", { opacity: sad, duration: 0.1 }, t);
+  tl.to("#sweat", { opacity: sad, duration: 0.15 }, t);
+  tl.to("#mouth-happy", { opacity: 1 - sad, duration: 0.1 }, t);
+  tl.to("#brows-happy", { opacity: 1 - sad, duration: 0.1 }, t);
+}
+function say(sel, a, b) {
+  tl.fromTo(sel, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, a);
+  if (b < 15) tl.to(sel, { opacity: 0, scale: 0.6, duration: 0.15, ease: "power2.in" }, b);
+}
+function stamp(sel, t) {
+  tl.fromTo(sel, { opacity: 0, scale: 3, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.28, ease: "back.out(2.5)" }, t);
+}
+function jolt(sel, t) {
+  [10, -10, 6, 0].forEach((x, i) => tl.to(sel, { x: x, duration: 0.05, ease: "none" }, t + i * 0.05));
+}
+
+// CTA (11.5–15s)
+tl.fromTo("#cta .lead", { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 11.55);
+tl.fromTo("#cta .word", { opacity: 0, scale: 0.2, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 11.7);
+tl.fromTo("#cta .tail", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 12.05);
+tl.fromTo("#cta .bubble", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(3)" }, 12.3);
+[12.8, 13.6, 14.4].forEach((t) => {
+  tl.to("#cta .word", { scale: 1.08, duration: 0.15, ease: "power2.out" }, t);
+  tl.to("#cta .word", { scale: 1, duration: 0.25, ease: "power2.in" }, t + 0.15);
+  tl.to("#cta .bubble", { y: -18, duration: 0.15, ease: "power2.out" }, t + 0.05);
+  tl.to("#cta .bubble", { y: 0, duration: 0.2, ease: "power2.in" }, t + 0.2);
+});
+tl.to("#cb-hat", { rotation: -18, y: -40, svgOrigin: "260 186", duration: 0.3, ease: "back.out(2)" }, 13.9);
+
+say("#say0", 2.7, 5.45);
+say("#say1", 6.1, 8.8);
+say("#say2", 9.4, 11.3);
+say("#say3", 12.45, 15.2);
+
+// ---------- corpo ----------
+tl.fromTo("#body", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 2.2);
+tl.to("#body", { opacity: 0, y: -80, duration: 0.25, ease: "power2.in" }, 11.35);
+
+// hook: cowboy assustado
+mood(0.9, "sad");
+point(1.2, -62);
+armDown(2.0);
+
+tl.fromTo(".vs-title", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 2.2);
+// ANTES
+tl.fromTo("#pA", { opacity: 0, x: -500 }, { opacity: 1, x: 0, duration: 0.45, ease: "power4.out" }, 2.35);
+tl.fromTo("#pA .art svg", { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "bounce.out" }, 2.6);
+tl.fromTo("#pA .txt", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 2.85);
+tl.fromTo("#pA .lockb", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, 3.3);
+stamp("#pA .penh", 3.7);
+jolt("#pA", 3.95);
+point(2.6, -84);
+// DEPOIS
+tl.to("#pA", { opacity: 0.55, scale: 0.97, duration: 0.3 }, 5.55);
+tl.fromTo("#arr", { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2.5)" }, 5.5);
+tl.fromTo("#pB", { opacity: 0, x: 500 }, { opacity: 1, x: 0, duration: 0.45, ease: "power4.out" }, 5.7);
+tl.fromTo("#pB .shieldic", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.5)" }, 6.0);
+tl.fromTo("#pB .glow", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5 }, 6.1);
+tl.to("#pB .glow", { scale: 1.2, opacity: 0.6, duration: 0.6, repeat: 3, yoyo: true, ease: "sine.inOut" }, 6.6);
+tl.fromTo("#pB .txt", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 6.35);
+stamp("#pB .susp", 6.9);
+mood(5.75, "happy");
+point(5.8, -72);
+nodYes(6.95);
+// RESULTADO
+tl.to([".vs-title", ".split"], { opacity: 0, scale: 0.85, duration: 0.25, ease: "power2.in" }, 8.9);
+tl.fromTo("#res", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 9.1);
+tl.fromTo(".rays", { opacity: 0, scale: 0.5, rotation: 0 }, { opacity: 1, scale: 1, rotation: 40, duration: 2.3, ease: "power1.out" }, 9.1);
+tl.fromTo(".bigshield", { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2)" }, 9.15);
+tl.fromTo("#tick", { strokeDasharray: 40, strokeDashoffset: 40 }, { strokeDasharray: 40, strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, 9.55);
+tl.fromTo(".r1", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 9.7);
+tl.fromTo(".r2", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power4.out" }, 9.9);
+jolt(".r2", 10.2);
+point(9.3, -58);
+nodYes(10.3);
+point(11.8, -24);
+
+window.__timelines = window.__timelines || {};
+window.__timelines["main"] = tl;
+tl.seek(0);
+    </script>
+  </body>
+</html>
