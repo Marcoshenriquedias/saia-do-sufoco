@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@700;800;900&display=block"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --green-900: #06190f;
+        --green-800: #0b2b1c;
+        --green-700: #12402a;
+        --gold: #d9b24c;
+        --gold-light: #f3d987;
+        --cream: #f6f1e3;
+        --red: #d64533;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--green-900);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: "Montserrat", sans-serif;
+        color: var(--cream);
+        background: radial-gradient(120% 80% at 50% 35%, var(--green-700) 0%, var(--green-800) 45%, var(--green-900) 100%);
+        overflow: hidden;
+      }
+      .frame {
+        position: absolute;
+        inset: 40px;
+        border: 3px solid rgba(217, 178, 76, 0.35);
+        border-radius: 28px;
+        pointer-events: none;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .scene {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 90px;
+        text-align: center;
+      }
+      .anton {
+        font-family: "Anton", "Montserrat", sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+      .gold {
+        color: var(--gold);
+      }
+
+      /* ---------- HOOK ---------- */
+      #hook {
+        justify-content: flex-start;
+        padding-top: 190px;
+      }
+      #hook .alert {
+        font-weight: 900;
+        font-size: 44px;
+        letter-spacing: 0.18em;
+        color: var(--green-900);
+        background: var(--gold);
+        padding: 14px 34px;
+        border-radius: 999px;
+        margin-bottom: 44px;
+      }
+      #hook .big {
+        font-size: 310px;
+        line-height: 0.9;
+        color: var(--gold);
+        text-shadow: 0 10px 0 rgba(0, 0, 0, 0.35);
+      }
+      #hook .sub {
+        margin-top: 36px;
+        font-size: 96px;
+        line-height: 1.08;
+        color: var(--cream);
+      }
+      #hook .sub .hl {
+        color: var(--gold-light);
+      }
+      .hook-line {
+        display: block;
+      }
+
+      /* ---------- LIST ---------- */
+      #list {
+        justify-content: flex-start;
+        padding-top: 120px;
+      }
+      #list .head {
+        font-size: 88px;
+        line-height: 1.18;
+        color: var(--cream);
+      }
+      #list .rule {
+        width: 280px;
+        height: 10px;
+        background: var(--gold);
+        border-radius: 6px;
+        margin: 26px auto 44px;
+        transform-origin: center;
+      }
+      .item {
+        position: relative;
+        align-self: flex-end;
+        width: 700px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        text-align: left;
+        background: rgba(6, 25, 15, 0.6);
+        border: 3px solid rgba(217, 178, 76, 0.55);
+        border-left: 14px solid var(--gold);
+        border-radius: 24px;
+        padding: 30px 34px;
+        margin-bottom: 30px;
+      }
+      .item .num {
+        flex: 0 0 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: var(--gold);
+        color: var(--green-900);
+        font-family: "Anton", sans-serif;
+        font-size: 78px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .item .txt {
+        font-weight: 900;
+        font-size: 50px;
+        line-height: 1.12;
+        color: var(--cream);
+      }
+      .item .txt b {
+        color: var(--gold-light);
+        font-weight: 900;
+      }
+      .item .stamp {
+        position: absolute;
+        top: -34px;
+        right: -24px;
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: var(--red);
+        border: 5px solid var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      }
+
+      /* ---------- CTA ---------- */
+      #cta {
+        justify-content: flex-start;
+        padding-top: 230px;
+      }
+      #cta .lead {
+        font-size: 120px;
+        line-height: 1;
+      }
+      #cta .word {
+        margin: 44px 0;
+        font-size: 230px;
+        line-height: 1;
+        color: var(--green-900);
+        background: var(--gold);
+        padding: 30px 70px 20px;
+        border-radius: 34px;
+        box-shadow: 0 0 0 10px rgba(217, 178, 76, 0.25), 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      #cta .tail {
+        font-weight: 900;
+        font-size: 74px;
+        line-height: 1.12;
+        color: var(--cream);
+      }
+      #cta .tail .gold {
+        color: var(--gold-light);
+      }
+      #cta .bubble {
+        align-self: flex-end;
+        margin: 60px 60px 0 0;
+        width: 150px;
+        height: 150px;
+      }
+
+      /* ---------- COWBOY ---------- */
+      #cowboy-layer {
+        pointer-events: none;
+      }
+      #cowboy {
+        position: absolute;
+        left: 20px;
+        bottom: -50px;
+        width: 560px;
+        height: 646px;
+        overflow: visible;
+      }
+
+      .say {
+        position: absolute;
+        left: 600px;
+        top: 1390px;
+        max-width: 420px;
+        background: var(--cream);
+        color: var(--green-900);
+        font-weight: 900;
+        font-size: 50px;
+        line-height: 1.08;
+        padding: 26px 34px;
+        border-radius: 34px;
+        border: 5px solid var(--gold);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+        transform-origin: 10% 100%;
+      }
+      .say::after {
+        content: "";
+        position: absolute;
+        left: 30px;
+        bottom: -40px;
+        border-width: 40px 34px 0 0;
+        border-style: solid;
+        border-color: var(--gold) transparent transparent transparent;
+      }
+
+      /* ---------- PROGRESS ---------- */
+      #progress {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: auto;
+        bottom: 70px;
+        height: 12px;
+        border-radius: 8px;
+        background: rgba(246, 241, 227, 0.12);
+        overflow: hidden;
+      }
+      #progress .fill {
+        width: 100%;
+        height: 100%;
+        background: var(--gold);
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="frame"></div>
+
+      <!-- 0s–2.3s: gancho -->
+      <section id="hook" class="clip scene" data-start="0" data-duration="2.3" data-track-index="0">
+        <div class="alert">ATENÇÃO, PRODUTOR</div>
+        <div class="big anton">3 ERROS</div>
+        <div class="sub anton">
+          <span class="hook-line">que o produtor rural</span>
+          <span class="hook-line">comete ao <span class="hl">renegociar</span></span>
+          <span class="hook-line">a dívida!</span>
+        </div>
+      </section>
+
+      <!-- 2.2s–11.6s: os 3 erros -->
+      <section id="list" class="clip scene" data-start="2.2" data-duration="9.4" data-track-index="1">
+        <div class="head anton">Os <span class="gold">3 erros</span> na renegociação</div>
+        <div class="rule"></div>
+        <div class="item" id="item1">
+          <div class="num">1</div>
+          <div class="txt">Assinar repactuação <b>sem rever juros abusivos</b></div>
+          <div class="stamp"><svg width="44" height="44" viewBox="0 0 24 24" stroke="#f6f1e3" stroke-width="4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19" /></svg></div>
+        </div>
+        <div class="item" id="item2">
+          <div class="num">2</div>
+          <div class="txt">Dar a <b>matrícula da terra</b> em garantia sem assessoria</div>
+          <div class="stamp"><svg width="44" height="44" viewBox="0 0 24 24" stroke="#f6f1e3" stroke-width="4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19" /></svg></div>
+        </div>
+        <div class="item" id="item3">
+          <div class="num">3</div>
+          <div class="txt">Ignorar a <b>prorrogação legal</b> por quebra de safra</div>
+          <div class="stamp"><svg width="44" height="44" viewBox="0 0 24 24" stroke="#f6f1e3" stroke-width="4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19" /></svg></div>
+        </div>
+      </section>
+
+      <!-- 11.5s–15s: CTA -->
+      <section id="cta" class="clip scene" data-start="11.5" data-duration="3.5" data-track-index="2">
+        <div class="lead anton">Comenta</div>
+        <div class="word anton">DÍVIDA</div>
+        <div class="tail">que eu te mando o<br /><span class="gold">passo a passo</span></div>
+        <svg class="bubble" viewBox="0 0 24 24" fill="none" stroke="#d9b24c" stroke-width="2" stroke-linejoin="round">
+          <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z" />
+        </svg>
+      </section>
+
+      <!-- Cowboy (0s–15s) -->
+      <div id="cowboy-layer" class="clip" data-start="0" data-duration="15" data-track-index="4">
+        <svg id="cowboy" viewBox="0 0 520 600" xmlns="http://www.w3.org/2000/svg">
+          <g id="cb-all">
+            <!-- braço esquerdo (repouso) -->
+            <path d="M92,455 C62,500 52,560 56,610 L118,610 C114,565 118,515 138,478 Z" fill="#a8472a" />
+            <!-- tronco / camisa -->
+            <path d="M60,610 C60,480 110,425 190,402 L330,402 C410,425 460,480 460,610 Z" fill="#b8532e" />
+            <!-- colete -->
+            <path d="M60,610 C60,490 98,438 172,410 L218,610 Z" fill="#4a2a14" />
+            <path d="M460,610 C460,490 422,438 348,410 L302,610 Z" fill="#4a2a14" />
+            <!-- estrela de xerife -->
+            <path
+              d="M128,470 l9,19 21,3 -15,15 4,21 -19,-10 -19,10 4,-21 -15,-15 21,-3 z"
+              fill="#d9b24c"
+              stroke="#8a6a1f"
+              stroke-width="2"
+            />
+            <!-- pescoço -->
+            <rect x="224" y="320" width="72" height="92" rx="20" fill="#d99868" />
+            <!-- lenço -->
+            <path d="M188,396 L332,396 L260,478 Z" fill="#c0392b" />
+            <circle cx="232" cy="398" r="14" fill="#a93226" />
+            <circle cx="288" cy="398" r="14" fill="#a93226" />
+
+            <!-- cabeça -->
+            <g id="cb-head">
+              <ellipse cx="173" cy="268" rx="19" ry="27" fill="#e2a678" />
+              <ellipse cx="347" cy="268" rx="19" ry="27" fill="#e2a678" />
+              <ellipse cx="260" cy="262" rx="88" ry="100" fill="#ebb487" />
+              <path d="M172,240 C164,128 356,128 348,240 C318,206 202,206 172,240 Z" fill="#4a2c16" />
+              <path d="M176,215 L190,215 L192,285 L178,280 Z" fill="#4a2c16" />
+              <path d="M344,215 L330,215 L328,285 L342,280 Z" fill="#4a2c16" />
+              <circle cx="206" cy="298" r="16" fill="#e8846b" opacity="0.4" />
+              <circle cx="314" cy="298" r="16" fill="#e8846b" opacity="0.4" />
+              <path d="M205,224 Q228,208 251,222" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" />
+              <path d="M269,222 Q292,208 315,224" stroke="#3b2412" stroke-width="10" fill="none" stroke-linecap="round" />
+              <g id="cb-eyes">
+                <ellipse cx="229" cy="254" rx="11" ry="15" fill="#2b1a0e" />
+                <ellipse cx="291" cy="254" rx="11" ry="15" fill="#2b1a0e" />
+                <circle cx="233" cy="249" r="4" fill="#ffffff" />
+                <circle cx="295" cy="249" r="4" fill="#ffffff" />
+              </g>
+              <ellipse cx="260" cy="290" rx="17" ry="14" fill="#d48e5f" />
+              <path d="M236,334 Q260,358 284,334 Z" fill="#7a2e1c" />
+              <path
+                d="M260,304 C236,294 204,302 188,330 C212,322 236,326 260,316 C284,326 308,322 332,330 C316,302 284,294 260,304 Z"
+                fill="#5a3418"
+              />
+            </g>
+
+            <!-- chapéu -->
+            <g id="cb-hat">
+              <path
+                d="M168,186 C162,126 172,66 202,50 C226,40 246,64 260,58 C274,64 294,40 318,50 C348,66 358,126 352,186 Z"
+                fill="#9c6631"
+              />
+              <path d="M206,60 C226,52 244,70 260,66 C276,70 294,52 314,60 C300,80 220,80 206,60 Z" fill="#7d4f24" />
+              <path d="M165,158 L355,158 L354,186 L166,186 Z" fill="#d9b24c" />
+              <path
+                d="M48,142 C62,196 160,214 260,214 C360,214 458,196 472,142 C446,174 364,186 260,186 C156,186 74,174 48,142 Z"
+                fill="#8b5a2b"
+              />
+            </g>
+
+            <!-- braço que aponta (gira no ombro 392,440) -->
+            <g id="cb-arm">
+              <rect x="372" y="410" width="160" height="62" rx="31" fill="#a8472a" />
+              <rect x="512" y="414" width="22" height="54" rx="8" fill="#4a2a14" />
+              <circle cx="560" cy="441" r="30" fill="#ebb487" />
+              <rect x="568" y="424" width="70" height="22" rx="11" fill="#ebb487" />
+              <ellipse cx="552" cy="416" rx="14" ry="10" fill="#e2a678" />
+            </g>
+          </g>
+        </svg>
+        <div class="say" id="say0">Presta atenção, sô!</div>
+        <div class="say" id="say1">Olha esses juros, sô!</div>
+        <div class="say" id="say2">A terra não, uai!</div>
+        <div class="say" id="say3">Isso é direito seu!</div>
+        <div class="say" id="say4">Comenta aí, sô!</div>
+      </div>
+
+      <div id="progress" class="clip" data-start="0" data-duration="15" data-track-index="3">
+        <div class="fill"></div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const SHOULDER = "392 440";
+      const HEAD = "260 300";
+
+      // Barra de progresso (15s)
+      tl.fromTo("#progress .fill", { scaleX: 0 }, { scaleX: 1, duration: 15, ease: "none" }, 0);
+
+      // ---------- GANCHO (0–2.3s) ----------
+      tl.fromTo("#hook .alert", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.25, ease: "back.out(2)" }, 0);
+      tl.fromTo("#hook .big", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power4.out" }, 0.05);
+      tl.fromTo(
+        "#hook .big",
+        { x: -14 },
+        { x: 0, duration: 0.25, ease: "elastic.out(1.2, 0.3)", immediateRender: false },
+        0.4
+      );
+      tl.fromTo(
+        "#hook .hook-line",
+        { opacity: 0, y: 80 },
+        { opacity: 1, y: 0, duration: 0.28, stagger: 0.12, ease: "power3.out" },
+        0.35
+      );
+      tl.to("#hook .big", { scale: 1.06, duration: 0.9, ease: "sine.inOut" }, 1.0);
+      tl.to("#hook", { opacity: 0, scale: 0.9, duration: 0.2, ease: "power2.in" }, 2.08);
+
+      // ---------- COWBOY ----------
+      // entra subindo pela base
+      tl.fromTo("#cowboy", { y: 640 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.75);
+      // braço começa abaixado (fora da tela)
+      tl.fromTo("#cb-arm", { rotation: 85, svgOrigin: SHOULDER }, { rotation: -62, svgOrigin: SHOULDER, duration: 0.3, ease: "back.out(2)" }, 1.15);
+      // respiração contínua
+      tl.fromTo("#cb-all", { y: 0 }, { y: -8, duration: 0.6, repeat: 22, yoyo: true, ease: "sine.inOut" }, 1.2);
+      // cabeça acompanha
+      tl.fromTo("#cb-head", { rotation: 0, svgOrigin: HEAD }, { rotation: -4, svgOrigin: HEAD, duration: 0.3 }, 1.2);
+      // piscadas
+      [1.9, 4.6, 7.2, 9.9, 13.1].forEach((t) => {
+        tl.to("#cb-eyes", { scaleY: 0.1, svgOrigin: "260 254", duration: 0.06, ease: "none" }, t);
+        tl.to("#cb-eyes", { scaleY: 1, svgOrigin: "260 254", duration: 0.08, ease: "none" }, t + 0.06);
+      });
+
+      // aponta + cutucada
+      function point(t, angle) {
+        tl.to("#cb-arm", { rotation: angle, svgOrigin: SHOULDER, duration: 0.3, ease: "back.out(2)" }, t);
+        tl.to("#cb-arm", { rotation: angle - 5, svgOrigin: SHOULDER, duration: 0.1, ease: "power1.out" }, t + 0.35);
+        tl.to("#cb-arm", { rotation: angle, svgOrigin: SHOULDER, duration: 0.15, ease: "power1.in" }, t + 0.45);
+      }
+
+      // ---------- LISTA (2.2–11.6s) ----------
+      tl.fromTo("#list", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 2.2);
+      tl.fromTo("#list .head", { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 2.2);
+      tl.fromTo("#list .rule", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 2.35);
+
+      const items = ["#item1", "#item2", "#item3"];
+      const starts = [2.55, 5.4, 8.25];
+      const angles = [-66, -55, -38];
+      items.forEach((sel, i) => {
+        const t = starts[i];
+        if (i > 0) tl.to(items[i - 1], { opacity: 0.45, scale: 0.96, duration: 0.25, ease: "power2.out" }, t);
+        tl.fromTo(sel, { opacity: 0, x: 900 }, { opacity: 1, x: 0, duration: 0.4, ease: "power4.out" }, t);
+        tl.fromTo(
+          sel + " .num",
+          { scale: 0, rotation: -180 },
+          { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.2)" },
+          t + 0.15
+        );
+        tl.fromTo(sel + " .txt", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, t + 0.25);
+        point(t + 0.1, angles[i]);
+        // carimbo "X"
+        tl.fromTo(
+          sel + " .stamp",
+          { opacity: 0, scale: 3, rotation: -40 },
+          { opacity: 1, scale: 1, rotation: 0, duration: 0.3, ease: "back.out(2.5)" },
+          t + 0.75
+        );
+        tl.to(sel, { x: 10, duration: 0.05, ease: "none" }, t + 0.98);
+        tl.to(sel, { x: -10, duration: 0.05, ease: "none" }, t + 1.03);
+        tl.to(sel, { x: 0, duration: 0.05, ease: "none" }, t + 1.08);
+      });
+      tl.to(["#item1", "#item2"], { opacity: 1, scale: 1, duration: 0.3 }, 10.9);
+      tl.to("#list", { opacity: 0, y: -80, duration: 0.25, ease: "power2.in" }, 11.35);
+
+      // ---------- CTA (11.5–15s) ----------
+      tl.fromTo("#cta .lead", { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 11.55);
+      tl.fromTo(
+        "#cta .word",
+        { opacity: 0, scale: 0.2, rotation: -8 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" },
+        11.7
+      );
+      tl.fromTo("#cta .tail", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 12.05);
+      tl.fromTo("#cta .bubble", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(3)" }, 12.3);
+      point(11.8, -24);
+      // pulso do "DÍVIDA" e do balão
+      [12.8, 13.6, 14.4].forEach((t) => {
+        tl.to("#cta .word", { scale: 1.08, duration: 0.15, ease: "power2.out" }, t);
+        tl.to("#cta .word", { scale: 1, duration: 0.25, ease: "power2.in" }, t + 0.15);
+        tl.to("#cta .bubble", { y: -18, duration: 0.15, ease: "power2.out" }, t + 0.05);
+        tl.to("#cta .bubble", { y: 0, duration: 0.2, ease: "power2.in" }, t + 0.2);
+      });
+      // balões de fala: [id, entra, sai]
+      [
+        ["#say0", 1.3, 2.15],
+        ["#say1", 3.3, 5.3],
+        ["#say2", 6.15, 8.15],
+        ["#say3", 9.0, 11.3],
+        ["#say4", 12.45, 15.2],
+      ].forEach(([sel, a, b]) => {
+        tl.fromTo(sel, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, a);
+        if (b < 15) tl.to(sel, { opacity: 0, scale: 0.6, duration: 0.15, ease: "power2.in" }, b);
+      });
+
+      // balança a cabeça "não" em cada erro
+      starts.forEach((t) => {
+        const h = t + 0.8;
+        tl.to("#cb-head", { rotation: 9, svgOrigin: HEAD, duration: 0.1, ease: "sine.inOut" }, h);
+        tl.to("#cb-head", { rotation: -9, svgOrigin: HEAD, duration: 0.14, ease: "sine.inOut" }, h + 0.1);
+        tl.to("#cb-head", { rotation: 7, svgOrigin: HEAD, duration: 0.14, ease: "sine.inOut" }, h + 0.24);
+        tl.to("#cb-head", { rotation: -4, svgOrigin: HEAD, duration: 0.12, ease: "sine.inOut" }, h + 0.38);
+      });
+
+      // tira o chapéu no final
+      tl.to("#cb-hat", { rotation: -18, y: -40, svgOrigin: "260 186", duration: 0.3, ease: "back.out(2)" }, 13.9);
+      tl.to("#cb-head", { rotation: 4, svgOrigin: HEAD, duration: 0.3 }, 13.9);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
