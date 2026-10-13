@@ -62,38 +62,52 @@ BASE_CSS = """
 html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--green-900)}
 #root{position:relative;width:100%;height:100%;font-family:"Montserrat",sans-serif;color:var(--cream);
  background:radial-gradient(120% 80% at 50% 35%,var(--green-700) 0%,var(--green-800) 45%,var(--green-900) 100%);overflow:hidden}
+#stage,#cam{position:absolute;inset:0;transform-origin:50% 42%}
 .frame{position:absolute;inset:40px;border:3px solid rgba(217,178,76,.35);border-radius:28px;pointer-events:none}
+.pt{position:absolute;border-radius:50%;background:radial-gradient(circle,#f3d987 0%,rgba(217,178,76,.5) 45%,rgba(217,178,76,0) 70%)}
+#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(85% 65% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%)}
+#grain{position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-size:256px 256px;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.wipe{position:absolute;top:-300px;left:0;width:520px;height:2500px;pointer-events:none;
+ background:linear-gradient(90deg,rgba(217,178,76,0),#d9b24c 30%,#fff1c2 50%,#d9b24c 70%,rgba(217,178,76,0))}
 .clip{position:absolute;inset:0}
-.scene{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:0 90px;text-align:center}
+.scene{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:0 110px;text-align:center}
 .anton{font-family:"Anton","Montserrat",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em}
 .gold{color:var(--gold)}
 .goldl{color:var(--gold-light)}
+.shine{background:linear-gradient(105deg,#d9b24c 0%,#d9b24c 38%,#fff6d6 50%,#d9b24c 62%,#d9b24c 100%);background-size:260% 100%;
+ background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:none!important;
+ filter:drop-shadow(0 7px 0 rgba(0,0,0,.35))}
+.mk{background:linear-gradient(transparent 56%,rgba(217,178,76,.55) 56%,rgba(217,178,76,.55) 94%,transparent 94%) no-repeat;
+ background-size:0% 100%;padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 /* gancho */
-#hook{padding-top:200px}
+#hook{padding-top:210px}
 #hook .pill{font-weight:900;font-size:44px;letter-spacing:.16em;color:var(--green-900);background:var(--gold);
  padding:14px 34px;border-radius:999px;margin-bottom:46px;display:flex;align-items:center;gap:14px}
 #hook .pill.red{background:var(--red);color:var(--cream)}
 #hook .h{line-height:1.13;color:var(--cream);text-shadow:0 8px 0 rgba(0,0,0,.35)}
 #hook .w{display:inline-block}
-#hook .w.hl{color:var(--gold)}
 #flash{position:absolute;inset:0;background:var(--cream);opacity:0;pointer-events:none}
 /* CTA */
 #cta{padding-top:230px}
 #cta .lead{font-size:120px;line-height:1}
-#cta .word{margin:44px 0;line-height:1;color:var(--green-900);background:var(--gold);padding:30px 64px 20px;border-radius:34px;
+#cta .word{position:relative;overflow:hidden;margin:44px 0;line-height:1;color:var(--green-900);background:var(--gold);padding:30px 64px 20px;border-radius:34px;
  box-shadow:0 0 0 10px rgba(217,178,76,.25),0 20px 60px rgba(0,0,0,.5);white-space:nowrap}
+#cta .sheen{position:absolute;top:-20%;left:0;width:35%;height:140%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.7),rgba(255,255,255,0))}
 #cta .tail{font-weight:900;font-size:72px;line-height:1.12;color:var(--cream)}
-#cta .bubble{align-self:flex-end;margin:60px 60px 0 0;width:150px;height:150px}
+#cta .bubble{margin-top:50px;width:140px;height:140px}
 /* cowboy */
 #cowboy-layer{pointer-events:none}
-#cowboy{position:absolute;left:20px;bottom:-50px;width:560px;height:646px;overflow:visible}
-.say{position:absolute;left:600px;top:1390px;max-width:420px;background:var(--cream);color:var(--green-900);font-weight:900;
- font-size:50px;line-height:1.08;padding:26px 34px;border-radius:34px;border:5px solid var(--gold);
+#cowboy{position:absolute;left:20px;bottom:40px;width:754px;height:646px;overflow:visible;
+ -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 98%);mask-image:linear-gradient(to bottom,#000 80%,transparent 98%)}
+.say{position:absolute;left:560px;top:1250px;max-width:380px;background:var(--cream);color:var(--green-900);font-weight:900;
+ font-size:46px;line-height:1.1;padding:24px 32px;border-radius:32px;border:5px solid var(--gold);
  box-shadow:0 14px 34px rgba(0,0,0,.45);transform-origin:10% 100%}
-.say::after{content:"";position:absolute;left:30px;bottom:-40px;border-width:40px 34px 0 0;border-style:solid;
+.say::after{content:"";position:absolute;left:28px;bottom:-40px;border-width:40px 34px 0 0;border-style:solid;
  border-color:var(--gold) transparent transparent transparent}
+.say .wd{white-space:nowrap}
 /* progresso */
-#progress{position:absolute;left:90px;right:90px;top:auto;bottom:70px;height:12px;border-radius:8px;background:rgba(246,241,227,.12);overflow:hidden}
+#progress{position:absolute;left:110px;right:110px;top:auto;bottom:70px;height:10px;border-radius:8px;background:rgba(246,241,227,.12);overflow:hidden}
 #progress .fill{width:100%;height:100%;background:var(--gold);transform-origin:left center}
 """
 
@@ -101,6 +115,27 @@ BASE_JS = """
 const tl = gsap.timeline({ paused: true });
 const SHOULDER = "392 440", HEAD = "260 300";
 tl.fromTo("#progress .fill", { scaleX: 0 }, { scaleX: 1, duration: 15, ease: "none" }, 0);
+
+// câmera: zoom lento contínuo + "punch" nos momentos fortes
+tl.fromTo("#cam", { scale: 1 }, { scale: 1.05, duration: 15, ease: "none" }, 0);
+function punch(t, s) {
+  tl.to("#stage", { scale: s || 1.06, duration: 0.1, ease: "power2.out" }, t);
+  tl.to("#stage", { scale: 1, duration: 0.4, ease: "power2.out" }, t + 0.1);
+}
+// partículas douradas
+document.querySelectorAll(".pt").forEach((el) => {
+  const d = parseFloat(el.dataset.d), o = parseFloat(el.dataset.o);
+  tl.fromTo(el, { y: 0, opacity: 0 }, { y: -d, opacity: o, duration: 15, ease: "none" }, 0);
+});
+// brilho no texto dourado / marca-texto / faixa de transição
+function shine(sel, t) {
+  tl.fromTo(sel, { backgroundPosition: "100% 0" }, { backgroundPosition: "0% 0", duration: 0.7, ease: "power2.inOut" }, t);
+}
+function marker(sel, t) {
+  tl.fromTo(sel, { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.35, stagger: 0.12, ease: "power2.out" }, t);
+}
+tl.fromTo("#wipe1", { x: -1500, skewX: -18 }, { x: 2000, skewX: -18, duration: 0.55, ease: "power2.inOut" }, 1.88);
+tl.fromTo("#wipe2", { x: -1500, skewX: -18 }, { x: 2000, skewX: -18, duration: 0.55, ease: "power2.inOut" }, 11.15);
 
 // gancho: palavras batendo + flash + tremida
 tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
@@ -111,11 +146,12 @@ tl.to("#hook .h", { x: 14, duration: 0.04, ease: "none" }, HOOK_END);
 tl.to("#hook .h", { x: -12, duration: 0.05, ease: "none" }, HOOK_END + 0.04);
 tl.to("#hook .h", { x: 6, duration: 0.05, ease: "none" }, HOOK_END + 0.09);
 tl.to("#hook .h", { x: 0, duration: 0.05, ease: "none" }, HOOK_END + 0.14);
-tl.to("#hook .h .hl", { scale: 1.08, duration: 0.5, ease: "sine.inOut" }, HOOK_END + 0.2);
+punch(HOOK_END, 1.04);
+shine("#hook .w.hl", HOOK_END + 0.15);
 tl.to("#hook", { opacity: 0, scale: 0.9, duration: 0.18, ease: "power2.in" }, 2.08);
 
 // cowboy
-tl.fromTo("#cowboy", { y: 700 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.75);
+tl.fromTo("#cowboy", { y: 760 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.75);
 tl.fromTo("#cb-arm", { rotation: 85, svgOrigin: SHOULDER }, { rotation: 85, svgOrigin: SHOULDER, duration: 0.01 }, 0);
 tl.fromTo("#cb-all", { y: 0 }, { y: -8, duration: 0.6, repeat: 22, yoyo: true, ease: "sine.inOut" }, 1.2);
 [1.9, 4.6, 7.2, 9.9, 13.1].forEach((t) => {
@@ -142,8 +178,15 @@ function mood(t, m) {
   tl.to("#mouth-happy", { opacity: 1 - sad, duration: 0.1 }, t);
   tl.to("#brows-happy", { opacity: 1 - sad, duration: 0.1 }, t);
 }
+// balão com texto "digitado" + boca falando
+const TYPE = 0.03;
 function say(sel, a, b) {
+  const n = document.querySelectorAll(sel + " .ch").length;
   tl.fromTo(sel, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, a);
+  tl.fromTo(sel + " .ch", { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: TYPE }, a + 0.12);
+  const talk = Math.max(2, Math.round((n * TYPE) / 0.16) * 2);
+  tl.fromTo(["#mouth-happy", "#mouth-sad"], { scaleY: 1, svgOrigin: "260 340" },
+    { scaleY: 0.3, svgOrigin: "260 340", duration: 0.08, repeat: talk - 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, a + 0.12);
   if (b < 15) tl.to(sel, { opacity: 0, scale: 0.6, duration: 0.15, ease: "power2.in" }, b);
 }
 function stamp(sel, t) {
@@ -156,8 +199,11 @@ function jolt(sel, t) {
 // CTA (11.5–15s)
 tl.fromTo("#cta .lead", { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 11.55);
 tl.fromTo("#cta .word", { opacity: 0, scale: 0.2, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 11.7);
+punch(11.95, 1.05);
 tl.fromTo("#cta .tail", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 12.05);
+marker("#cta .tail .mk", 12.3);
 tl.fromTo("#cta .bubble", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(3)" }, 12.3);
+tl.fromTo("#cta .sheen", { xPercent: -150 }, { xPercent: 330, duration: 0.6, ease: "power2.inOut", repeat: 1, repeatDelay: 1.1 }, 12.55);
 [12.8, 13.6, 14.4].forEach((t) => {
   tl.to("#cta .word", { scale: 1.08, duration: 0.15, ease: "power2.out" }, t);
   tl.to("#cta .word", { scale: 1, duration: 0.25, ease: "power2.in" }, t + 0.15);
@@ -169,31 +215,71 @@ tl.to("#cb-hat", { rotation: -18, y: -40, svgOrigin: "260 186", duration: 0.3, e
 
 
 def hook_html(pill, lines, size, pill_red=False, pill_icon=None, extra=""):
-    """lines: lista de linhas; palavras com *asterisco* viram douradas."""
+    """lines: lista de linhas; palavras com *asterisco* viram douradas (com brilho)."""
     out = []
     for line in lines:
         ws = []
         for w in line.split():
             hl = w.startswith("*")
-            ws.append(f'<span class="w{" hl" if hl else ""}">{w.strip("*")}</span>')
-        out.append('<div class="hl-line">' + " ".join(ws) + "</div>")
+            ws.append(f'<span class="w{" hl shine" if hl else ""}">{w.strip("*")}</span>')
+        out.append("<div>" + " ".join(ws) + "</div>")
     ic = icon(pill_icon, "#f6f1e3" if pill_red else "#06190f", 44, 6) if pill_icon else ""
     return (f'<section id="hook" class="clip scene" data-start="0" data-duration="2.3" data-track-index="0">'
             f'<div class="pill{" red" if pill_red else ""}">{ic}{pill}</div>'
             f'<div class="h anton" style="font-size:{size}px">{"".join(out)}</div>{extra}</section>')
 
 
+def hook_words(hook):
+    return hook.count('class="w')
+
+
 def cta_html(word, tail_html, word_size=200):
     return (f'<section id="cta" class="clip scene" data-start="11.5" data-duration="3.5" data-track-index="2">'
-            f'<div class="lead anton">Comenta</div><div class="word anton" style="font-size:{word_size}px">{word}</div>'
+            f'<div class="lead anton">Comenta</div><div class="word anton" style="font-size:{word_size}px">{word}<div class="sheen"></div></div>'
             f'<div class="tail">{tail_html}</div>'
             '<svg class="bubble" viewBox="0 0 24 24" fill="none" stroke="#d9b24c" stroke-width="2" stroke-linejoin="round">'
             '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z" /></svg></section>')
 
 
-def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagger=0.09):
-    """says: lista de (texto, entra, sai)."""
-    say_html = "".join(f'<div class="say" id="say{i}">{t}</div>' for i, (t, a, b) in enumerate(says))
+def _typed(text):
+    words = []
+    for w in text.split(" "):
+        words.append('<span class="wd">' + "".join(f'<span class="ch">{c}</span>' for c in w) + "</span>")
+    return " ".join(words)
+
+
+def _particles(n=22):
+    import random
+    r = random.Random(3)
+    out = []
+    for _ in range(n):
+        s = r.randint(6, 18)
+        out.append(f'<div class="pt" style="left:{r.randint(60, 1000)}px;top:{r.randint(300, 1800)}px;width:{s}px;height:{s}px" '
+                   f'data-d="{r.randint(150, 420)}" data-o="{r.uniform(.25, .7):.2f}"></div>')
+    return "".join(out)
+
+
+def base_sfx(hook, says, hook_stagger):
+    n = hook_words(hook)
+    hook_end = 0.08 + hook_stagger * (n - 1) + 0.2
+    ev = [(0, "thud", 0.8), (0, "whoosh", 0.5)]
+    ev += [(0.08 + i * hook_stagger, "tock", 0.8) for i in range(n)]
+    ev += [(hook_end, "thud", 0.7), (hook_end + 0.15, "sparkle", 0.5), (0.75, "whoosh", 0.45),
+           (1.95, "swish"), (11.22, "swish"),
+           (11.55, "whoosh", 0.5), (11.75, "thud"), (12.05, "tock"), (12.3, "pop"), (12.55, "sparkle", 0.6),
+           (12.8, "tock", 0.5), (13.6, "tock", 0.5), (14.4, "tock", 0.5), (13.9, "whoosh", 0.35)]
+    for text, a, b in says:
+        ev.append((a, "pop", 0.8))
+        for k in range(0, len(text), 3):
+            ev.append((a + 0.12 + k * 0.03, "tick", 0.35))
+    return ev
+
+
+def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagger=0.09, sfx=()):
+    """says: lista de (texto, entra, sai). sfx: lista de (tempo, som[, ganho]) do corpo."""
+    import sfx as S
+
+    say_html = "".join(f'<div class="say" id="say{i}">{_typed(t)}</div>' for i, (t, a, b) in enumerate(says))
     say_js = "".join(f'say("#say{i}", {a}, {b});\n' for i, (t, a, b) in enumerate(says))
     html = f"""<!doctype html>
 <html lang="pt-BR" data-resolution="portrait">
@@ -208,13 +294,20 @@ def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagg
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
-      <div class="frame"></div>
-      {hook}
-      <section id="body" class="clip scene" data-start="2.2" data-duration="9.4" data-track-index="1">{body_html}</section>
-      {cta}
+      <div id="stage"><div id="cam">
+        <div class="frame"></div>
+        {_particles()}
+        {hook}
+        <section id="body" class="clip scene" data-start="2.2" data-duration="9.4" data-track-index="1">{body_html}</section>
+        {cta}
+      </div></div>
+      <div id="vignette"></div>
       <div id="cowboy-layer" class="clip" data-start="0" data-duration="15" data-track-index="4">{COWBOY}{say_html}</div>
       <div id="progress" class="clip" data-start="0" data-duration="15" data-track-index="3"><div class="fill"></div></div>
+      <div class="wipe" id="wipe1"></div><div class="wipe" id="wipe2"></div>
       <div id="flash" class="clip" data-start="0" data-duration="0.5" data-track-index="5"></div>
+      <div id="grain"></div>
+      <audio id="sfx" src="sfx.wav" data-start="0" data-duration="15" data-volume="1" data-track-index="6"></audio>
     </div>
     <script>
 const HOOK_STAGGER = {hook_stagger};
@@ -237,4 +330,5 @@ tl.seek(0);
         shutil.copy(os.path.join(TEMPLATE, f), d)
     json.dump({"id": slug, "name": title}, open(os.path.join(d, "meta.json"), "w"))
     open(os.path.join(d, "index.html"), "w").write(html)
+    S.render(base_sfx(hook, says, hook_stagger) + list(sfx), os.path.join(d, "sfx.wav"))
     return d

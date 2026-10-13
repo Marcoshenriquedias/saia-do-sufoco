@@ -15,11 +15,11 @@ body = f"""
   </div>
   <div class="arrow" id="arr"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#06190f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   <div class="panel after" id="pB">
-    <div class="tag anton">Depois</div>
+    <div class="tag anton shine">Depois</div>
     <div class="art"><div class="glow"></div>{icon("shield", "#d9b24c", 250, 3.5, "shieldic")}
       <div class="susp anton">Execução suspensa</div>
     </div>
-    <div class="txt">Defesa <b>blindada</b> e <b>suspensão</b> da execução</div>
+    <div class="txt">Defesa <b class="mk">blindada</b> e <b class="mk">suspensão</b> da execução</div>
   </div>
 </div>
 <div class="result" id="res">
@@ -30,7 +30,7 @@ body = f"""
     <path id="tick" d="M21 34l8 8 15-16" fill="none" stroke="#f3d987" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
   <div class="r1 anton">Patrimônio</div>
-  <div class="r2 anton">Protegido</div>
+  <div class="r2 anton shine">Protegido</div>
 </div>
 """
 
@@ -38,7 +38,7 @@ css = """
 #body{padding-top:150px}
 .vs-title{font-size:84px;line-height:1.1;margin-bottom:50px}
 .split{position:relative;width:100%;display:flex;gap:40px;justify-content:space-between}
-.panel{position:relative;width:430px;height:780px;border-radius:30px;padding:36px 30px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.panel{position:relative;width:410px;height:780px;border-radius:30px;padding:36px 30px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .panel .tag{font-size:96px;line-height:1}
 .panel .art{position:relative;margin:30px 0 70px;height:300px;display:flex;align-items:center;justify-content:center}
 .panel .txt{font-weight:900;font-size:46px;line-height:1.14}
@@ -62,8 +62,8 @@ css = """
  background:repeating-conic-gradient(rgba(217,178,76,.16) 0deg 10deg,rgba(217,178,76,0) 10deg 20deg);
  -webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%)}
 .bigshield{position:relative;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
-.r1{position:relative;font-size:150px;line-height:1;margin-top:40px}
-.r2{position:relative;font-size:190px;line-height:1;color:var(--gold)}
+.r1{position:relative;font-size:140px;line-height:1;margin-top:40px}
+.r2{position:relative;font-size:180px;line-height:1.05;color:var(--gold)}
 """
 
 js = """
@@ -79,6 +79,7 @@ tl.fromTo("#pA .art svg", { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration:
 tl.fromTo("#pA .txt", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 2.85);
 tl.fromTo("#pA .lockb", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, 3.3);
 stamp("#pA .penh", 3.7);
+punch(3.78);
 jolt("#pA", 3.95);
 point(2.6, -84);
 // DEPOIS
@@ -90,6 +91,8 @@ tl.fromTo("#pB .glow", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, durat
 tl.to("#pB .glow", { scale: 1.2, opacity: 0.6, duration: 0.6, repeat: 3, yoyo: true, ease: "sine.inOut" }, 6.6);
 tl.fromTo("#pB .txt", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 6.35);
 stamp("#pB .susp", 6.9);
+shine("#pB .tag", 6.3);
+marker("#pB .txt .mk", 6.6);
 mood(5.75, "happy");
 point(5.8, -72);
 nodYes(6.95);
@@ -101,7 +104,8 @@ tl.fromTo(".bigshield", { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, du
 tl.fromTo("#tick", { strokeDasharray: 40, strokeDashoffset: 40 }, { strokeDasharray: 40, strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, 9.55);
 tl.fromTo(".r1", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 9.7);
 tl.fromTo(".r2", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power4.out" }, 9.9);
-jolt(".r2", 10.2);
+punch(10.0, 1.07);
+shine(".r2", 10.3);
 point(9.3, -58);
 nodYes(10.3);
 point(11.8, -24);
@@ -109,6 +113,10 @@ point(11.8, -24);
 
 says = [("Ai, meu Deus... e agora?", 2.7, 5.45), ("Agora sim, sô!", 6.1, 8.8), ("Isso que é defesa!", 9.4, 11.3), ("Comenta aí, sô!", 12.45, 15.2)]
 
+SFX = [(2.35, "whoosh"), (2.62, "thud", 0.6), (3.3, "pop"), (3.7, "stamp"), (3.8, "bad"),
+       (5.5, "whoosh", 0.6), (5.72, "whoosh"), (6.0, "sparkle"), (6.3, "ding", 0.5), (6.9, "stamp", 0.6), (6.95, "good"),
+       (8.9, "whoosh", 0.6), (9.15, "thud"), (9.55, "ding"), (9.9, "stamp", 0.8), (10.3, "sparkle")]
+
 d = build("r1-antes-depois", "Antes e Depois", hook, body, css, js,
-          cta_html("PROTEÇÃO", 'que eu te <span class="goldl">explico</span>', 168), says, 0.11)
+          cta_html("PROTEÇÃO", 'que eu te <span class="goldl mk">explico</span>', 168), says, 0.11, SFX)
 print(d)
