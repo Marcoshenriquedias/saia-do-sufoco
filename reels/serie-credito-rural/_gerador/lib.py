@@ -56,6 +56,25 @@ def icon(name, color="#d9b24c", size=64, width=4, cls=""):
             + STROKE.format(c=color, w=width) + f'>{ICONS[name]}</svg>')
 
 
+WIFE = open(os.path.join(HERE, "wife.svg.html")).read()
+
+WIFE_JS = """
+// esposa
+const WHEAD = "182 250";
+tl.fromTo("#wife", { y: 640 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.95);
+tl.fromTo("#wf-all", { y: 0 }, { y: -7, duration: 0.7, repeat: Math.ceil((DUR - 1.4) / 0.7), yoyo: true, ease: "sine.inOut" }, 1.4);
+BLINKS.forEach((t) => {
+  tl.to("#wf-eyes", { scaleY: 0.1, svgOrigin: "182 192", duration: 0.06, ease: "none" }, t + 0.7);
+  tl.to("#wf-eyes", { scaleY: 1, svgOrigin: "182 192", duration: 0.08, ease: "none" }, t + 0.76);
+});
+function wnod(t) { [10, 0, 8, 0].forEach((y, i) => tl.to("#wf-head", { y: y, duration: 0.12, ease: "sine.inOut" }, t + i * 0.12)); }
+function wtilt(t, r) { tl.to("#wf-head", { rotation: r, svgOrigin: WHEAD, duration: 0.3, ease: "sine.inOut" }, t); }
+function wfolder(t) {
+  tl.to("#wf-folder", { y: -46, rotation: 8, svgOrigin: "186 478", duration: 0.25, ease: "back.out(2)" }, t);
+  tl.to("#wf-folder", { y: 0, rotation: 0, svgOrigin: "186 478", duration: 0.3, ease: "power2.inOut" }, t + 1.1);
+}
+"""
+
 BASE_CSS = """
 :root{--green-900:#06190f;--green-800:#0b2b1c;--green-700:#12402a;--gold:#d9b24c;--gold-light:#f3d987;--cream:#f6f1e3;--red:#d64533;--gray:#8d958f}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -106,6 +125,10 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--g
 .say::after{content:"";position:absolute;left:28px;bottom:-40px;border-width:40px 34px 0 0;border-style:solid;
  border-color:var(--gold) transparent transparent transparent}
 .say .wd{white-space:nowrap}
+#wife{position:absolute;left:650px;bottom:40px;width:330px;height:513px;overflow:visible;
+ -webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent 98%);mask-image:linear-gradient(to bottom,#000 80%,transparent 98%)}
+.say.w{left:440px;background:#fff3cf;border-color:#3b6ea5}
+.say.w::after{left:auto;right:70px;border-width:40px 0 0 34px;border-color:#3b6ea5 transparent transparent transparent}
 /* progresso */
 #progress{position:absolute;left:110px;right:110px;top:auto;bottom:70px;height:10px;border-radius:8px;background:rgba(246,241,227,.12);overflow:hidden}
 #progress .fill{width:100%;height:100%;background:var(--gold);transform-origin:left center}
@@ -113,11 +136,12 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--g
 
 BASE_JS = """
 const tl = gsap.timeline({ paused: true });
+const C = CTA_T - 11.5;
 const SHOULDER = "392 440", HEAD = "260 300";
-tl.fromTo("#progress .fill", { scaleX: 0 }, { scaleX: 1, duration: 15, ease: "none" }, 0);
+tl.fromTo("#progress .fill", { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: "none" }, 0);
 
 // câmera: zoom lento contínuo + "punch" nos momentos fortes
-tl.fromTo("#cam", { scale: 1 }, { scale: 1.05, duration: 15, ease: "none" }, 0);
+tl.fromTo("#cam", { scale: 1 }, { scale: 1.05, duration: DUR, ease: "none" }, 0);
 function punch(t, s) {
   tl.to("#stage", { scale: s || 1.06, duration: 0.1, ease: "power2.out" }, t);
   tl.to("#stage", { scale: 1, duration: 0.4, ease: "power2.out" }, t + 0.1);
@@ -125,7 +149,7 @@ function punch(t, s) {
 // partículas douradas
 document.querySelectorAll(".pt").forEach((el) => {
   const d = parseFloat(el.dataset.d), o = parseFloat(el.dataset.o);
-  tl.fromTo(el, { y: 0, opacity: 0 }, { y: -d, opacity: o, duration: 15, ease: "none" }, 0);
+  tl.fromTo(el, { y: 0, opacity: 0 }, { y: -d, opacity: o, duration: DUR, ease: "none" }, 0);
 });
 // brilho no texto dourado / marca-texto / faixa de transição
 function shine(sel, t) {
@@ -135,7 +159,7 @@ function marker(sel, t) {
   tl.fromTo(sel, { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.35, stagger: 0.12, ease: "power2.out" }, t);
 }
 tl.fromTo("#wipe1", { x: -1500, skewX: -18 }, { x: 2000, skewX: -18, duration: 0.55, ease: "power2.inOut" }, 1.88);
-tl.fromTo("#wipe2", { x: -1500, skewX: -18 }, { x: 2000, skewX: -18, duration: 0.55, ease: "power2.inOut" }, 11.15);
+tl.fromTo("#wipe2", { x: -1500, skewX: -18 }, { x: 2000, skewX: -18, duration: 0.55, ease: "power2.inOut" }, C + 11.15);
 
 // gancho: palavras batendo + flash + tremida
 tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
@@ -153,8 +177,8 @@ tl.to("#hook", { opacity: 0, scale: 0.9, duration: 0.18, ease: "power2.in" }, 2.
 // cowboy
 tl.fromTo("#cowboy", { y: 760 }, { y: 0, duration: 0.45, ease: "back.out(1.6)" }, 0.75);
 tl.fromTo("#cb-arm", { rotation: 85, svgOrigin: SHOULDER }, { rotation: 85, svgOrigin: SHOULDER, duration: 0.01 }, 0);
-tl.fromTo("#cb-all", { y: 0 }, { y: -8, duration: 0.6, repeat: 22, yoyo: true, ease: "sine.inOut" }, 1.2);
-[1.9, 4.6, 7.2, 9.9, 13.1].forEach((t) => {
+tl.fromTo("#cb-all", { y: 0 }, { y: -8, duration: 0.6, repeat: Math.ceil((DUR - 1.2) / 0.6), yoyo: true, ease: "sine.inOut" }, 1.2);
+BLINKS.forEach((t) => {
   tl.to("#cb-eyes", { scaleY: 0.1, svgOrigin: "260 254", duration: 0.06, ease: "none" }, t);
   tl.to("#cb-eyes", { scaleY: 1, svgOrigin: "260 254", duration: 0.08, ease: "none" }, t + 0.06);
 });
@@ -180,14 +204,16 @@ function mood(t, m) {
 }
 // balão com texto "digitado" + boca falando
 const TYPE = 0.03;
-function say(sel, a, b) {
+function say(sel, a, b, who) {
   const n = document.querySelectorAll(sel + " .ch").length;
   tl.fromTo(sel, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, a);
   tl.fromTo(sel + " .ch", { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: TYPE }, a + 0.12);
   const talk = Math.max(2, Math.round((n * TYPE) / 0.16) * 2);
-  tl.fromTo(["#mouth-happy", "#mouth-sad"], { scaleY: 1, svgOrigin: "260 340" },
-    { scaleY: 0.3, svgOrigin: "260 340", duration: 0.08, repeat: talk - 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, a + 0.12);
-  if (b < 15) tl.to(sel, { opacity: 0, scale: 0.6, duration: 0.15, ease: "power2.in" }, b);
+  const M = who === "w" ? ["#wf-mouth"] : ["#mouth-happy", "#mouth-sad"], MO = who === "w" ? "182 244" : "260 340";
+  if (who === "w" && !document.querySelector("#wf-mouth")) return;
+  tl.fromTo(M, { scaleY: 1, svgOrigin: MO },
+    { scaleY: 0.3, svgOrigin: MO, duration: 0.08, repeat: talk - 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, a + 0.12);
+  if (b < DUR) tl.to(sel, { opacity: 0, scale: 0.6, duration: 0.15, ease: "power2.in" }, b);
 }
 function stamp(sel, t) {
   tl.fromTo(sel, { opacity: 0, scale: 3, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.28, ease: "back.out(2.5)" }, t);
@@ -197,20 +223,20 @@ function jolt(sel, t) {
 }
 
 // CTA (11.5–15s)
-tl.fromTo("#cta .lead", { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 11.55);
-tl.fromTo("#cta .word", { opacity: 0, scale: 0.2, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 11.7);
-punch(11.95, 1.05);
-tl.fromTo("#cta .tail", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 12.05);
-marker("#cta .tail .mk", 12.3);
-tl.fromTo("#cta .bubble", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(3)" }, 12.3);
-tl.fromTo("#cta .sheen", { xPercent: -150 }, { xPercent: 330, duration: 0.6, ease: "power2.inOut", repeat: 1, repeatDelay: 1.1 }, 12.55);
-[12.8, 13.6, 14.4].forEach((t) => {
+tl.fromTo("#cta .lead", { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, C + 11.55);
+tl.fromTo("#cta .word", { opacity: 0, scale: 0.2, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, C + 11.7);
+punch(C + 11.95, 1.05);
+tl.fromTo("#cta .tail", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, C + 12.05);
+marker("#cta .tail .mk", C + 12.3);
+tl.fromTo("#cta .bubble", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(3)" }, C + 12.3);
+tl.fromTo("#cta .sheen", { xPercent: -150 }, { xPercent: 330, duration: 0.6, ease: "power2.inOut", repeat: 1, repeatDelay: 1.1 }, C + 12.55);
+[C + 12.8, C + 13.6, C + 14.4].forEach((t) => {
   tl.to("#cta .word", { scale: 1.08, duration: 0.15, ease: "power2.out" }, t);
   tl.to("#cta .word", { scale: 1, duration: 0.25, ease: "power2.in" }, t + 0.15);
   tl.to("#cta .bubble", { y: -18, duration: 0.15, ease: "power2.out" }, t + 0.05);
   tl.to("#cta .bubble", { y: 0, duration: 0.2, ease: "power2.in" }, t + 0.2);
 });
-tl.to("#cb-hat", { rotation: -18, y: -40, svgOrigin: "260 186", duration: 0.3, ease: "back.out(2)" }, 13.9);
+tl.to("#cb-hat", { rotation: -18, y: -40, svgOrigin: "260 186", duration: 0.3, ease: "back.out(2)" }, C + 13.9);
 """
 
 
@@ -233,8 +259,8 @@ def hook_words(hook):
     return hook.count('class="w')
 
 
-def cta_html(word, tail_html, word_size=200):
-    return (f'<section id="cta" class="clip scene" data-start="11.5" data-duration="3.5" data-track-index="2">'
+def cta_html(word, tail_html, word_size=200, dur=15):
+    return (f'<section id="cta" class="clip scene" data-start="{dur - 3.5}" data-duration="3.5" data-track-index="2">'
             f'<div class="lead anton">Comenta</div><div class="word anton" style="font-size:{word_size}px">{word}<div class="sheen"></div></div>'
             f'<div class="tail">{tail_html}</div>'
             '<svg class="bubble" viewBox="0 0 24 24" fill="none" stroke="#d9b24c" stroke-width="2" stroke-linejoin="round">'
@@ -259,28 +285,34 @@ def _particles(n=22):
     return "".join(out)
 
 
-def base_sfx(hook, says, hook_stagger):
+def base_sfx(hook, says, hook_stagger, cta_t=11.5):
     n = hook_words(hook)
     hook_end = 0.08 + hook_stagger * (n - 1) + 0.2
     ev = [(0, "thud", 0.8), (0, "whoosh", 0.5)]
     ev += [(0.08 + i * hook_stagger, "tock", 0.8) for i in range(n)]
     ev += [(hook_end, "thud", 0.7), (hook_end + 0.15, "sparkle", 0.5), (0.75, "whoosh", 0.45),
-           (1.95, "swish"), (11.22, "swish"),
-           (11.55, "whoosh", 0.5), (11.75, "thud"), (12.05, "tock"), (12.3, "pop"), (12.55, "sparkle", 0.6),
-           (12.8, "tock", 0.5), (13.6, "tock", 0.5), (14.4, "tock", 0.5), (13.9, "whoosh", 0.35)]
-    for text, a, b in says:
+           (1.95, "swish")]
+    c = cta_t - 11.5
+    ev += [(c + t, n, g) for t, n, g in [(11.22, "swish", 1), (11.55, "whoosh", 0.5), (11.75, "thud", 1), (12.05, "tock", 1),
+           (12.3, "pop", 1), (12.55, "sparkle", 0.6), (12.8, "tock", 0.5), (13.6, "tock", 0.5), (14.4, "tock", 0.5), (13.9, "whoosh", 0.35)]]
+    for text, a, b, *_ in says:
         ev.append((a, "pop", 0.8))
         for k in range(0, len(text), 3):
             ev.append((a + 0.12 + k * 0.03, "tick", 0.35))
     return ev
 
 
-def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagger=0.09, sfx=()):
+def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagger=0.09, sfx=(), dur=15, wife=False):
     """says: lista de (texto, entra, sai). sfx: lista de (tempo, som[, ganho]) do corpo."""
     import sfx as S
 
-    say_html = "".join(f'<div class="say" id="say{i}">{_typed(t)}</div>' for i, (t, a, b) in enumerate(says))
-    say_js = "".join(f'say("#say{i}", {a}, {b});\n' for i, (t, a, b) in enumerate(says))
+    says = [tuple(x) + ("c",) * (4 - len(x)) for x in says]
+    say_html = "".join(f'<div class="say{" w" if w == "w" else ""}" id="say{i}">{_typed(t)}</div>' for i, (t, a, b, w) in enumerate(says))
+    say_js = "".join(f'say("#say{i}", {a}, {b}, "{w}");\n' for i, (t, a, b, w) in enumerate(says))
+    cta_t = dur - 3.5
+    wife_svg = WIFE if wife else ""
+    wife_js = WIFE_JS if wife else ""
+    blinks = [round(x, 2) for x in [1.9 + 2.65 * k for k in range(int((dur - 2) / 2.65) + 1)] if x < dur - 0.3]
     html = f"""<!doctype html>
 <html lang="pt-BR" data-resolution="portrait">
   <head>
@@ -293,29 +325,30 @@ def build(slug, title, hook, body_html, body_css, body_js, cta, says, hook_stagg
     <style>{BASE_CSS}{body_css}</style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="{dur}" data-width="1080" data-height="1920">
       <div id="stage"><div id="cam">
         <div class="frame"></div>
         {_particles()}
         {hook}
-        <section id="body" class="clip scene" data-start="2.2" data-duration="9.4" data-track-index="1">{body_html}</section>
+        <section id="body" class="clip scene" data-start="2.2" data-duration="{round(cta_t - 2.1, 2)}" data-track-index="1">{body_html}</section>
         {cta}
       </div></div>
       <div id="vignette"></div>
-      <div id="cowboy-layer" class="clip" data-start="0" data-duration="15" data-track-index="4">{COWBOY}{say_html}</div>
-      <div id="progress" class="clip" data-start="0" data-duration="15" data-track-index="3"><div class="fill"></div></div>
+      <div id="cowboy-layer" class="clip" data-start="0" data-duration="{dur}" data-track-index="4">{wife_svg}{COWBOY}{say_html}</div>
+      <div id="progress" class="clip" data-start="0" data-duration="{dur}" data-track-index="3"><div class="fill"></div></div>
       <div class="wipe" id="wipe1"></div><div class="wipe" id="wipe2"></div>
       <div id="flash" class="clip" data-start="0" data-duration="0.5" data-track-index="5"></div>
       <div id="grain"></div>
-      <audio id="sfx" src="sfx.wav" data-start="0" data-duration="15" data-volume="1" data-track-index="6"></audio>
+      <audio id="sfx" src="sfx.wav" data-start="0" data-duration="{dur}" data-volume="1" data-track-index="6"></audio>
     </div>
     <script>
-const HOOK_STAGGER = {hook_stagger};
+const HOOK_STAGGER = {hook_stagger}, DUR = {dur}, CTA_T = {cta_t}, BLINKS = {blinks};
 {BASE_JS}
+{wife_js}
 {say_js}
 // ---------- corpo ----------
 tl.fromTo("#body", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.15 }}, 2.2);
-tl.to("#body", {{ opacity: 0, y: -80, duration: 0.25, ease: "power2.in" }}, 11.35);
+tl.to("#body", {{ opacity: 0, y: -80, duration: 0.25, ease: "power2.in" }}, CTA_T - 0.15);
 {body_js}
 window.__timelines = window.__timelines || {{}};
 window.__timelines["main"] = tl;
@@ -330,5 +363,5 @@ tl.seek(0);
         shutil.copy(os.path.join(TEMPLATE, f), d)
     json.dump({"id": slug, "name": title}, open(os.path.join(d, "meta.json"), "w"))
     open(os.path.join(d, "index.html"), "w").write(html)
-    S.render(base_sfx(hook, says, hook_stagger) + list(sfx), os.path.join(d, "sfx.wav"))
+    S.render(base_sfx(hook, says, hook_stagger, cta_t) + list(sfx), os.path.join(d, "sfx.wav"), dur)
     return d
