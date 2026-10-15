@@ -4,8 +4,24 @@ SRC="/root/.claude/uploads/b0fd227e-bd34-5145-98d0-fa2802dc5338/89e8c350-WhatsAp
 SP=1.05; CARD=2.0
 K=json.load(open(f"{S}/keep_{VER}.json")); keep=K["keep"]; cut=set(K["cut_idx"])
 ws=[w for s in json.load(open(f"{S}/words.json")) for w in s['words']]
+XF=0.125  # dissolve de 3 quadros entre trechos
+F=1/24
+k2=[]
+for n,(s,e) in enumerate(keep):
+    gl=s-keep[n-1][1] if n else 99; gr=keep[n+1][0]-e if n+1<len(keep) else 99
+    if e-s<0.25 and (n==0 or n==len(keep)-1 or max(gl,gr)>1.0): continue   # resíduo de ruído junto a corte
+    if k2 and s-k2[-1][1]<0.2: k2[-1]=[k2[-1][0],e]                         # micro-salto: junta
+    else: k2.append([s,e])
+for n in range(len(k2)-1):   # folga para o dissolve não engolir o fim da palavra
+    if k2[n+1][0]-k2[n][1]>=0.3: k2[n][1]+=0.1
+keep=[[round(s/F)*F,round(e/F)*F] for s,e in k2]
+ZOOM=[];z=0
+for n in range(len(keep)):
+    if n and keep[n][0]-keep[n-1][1]>1.0: z^=1          # corte de conteúdo: alterna enquadramento
+    ZOOM.append(z)
 cum=[];c=0
-for s,e in keep: cum.append(c); c+=e-s
+for n,(s,e) in enumerate(keep): cum.append(c-n*XF); c+=e-s
+c-=(len(keep)-1)*XF
 MAIN=c/SP
 def omap(t):
     for (s,e),c0 in zip(keep,cum):
@@ -99,17 +115,32 @@ open(f"{S}/subs_{VER}.ass","w").write(ass)
 open(f"{S}/captions_{VER}.txt","w").write("\n".join(f"{ts(c[0]['s'])}  "+" ".join(x['t'] for x in c) for c in chunks))
 # filtergraph
 fg=[]
-for n,(s,e) in enumerate(keep):
-    d=e-s
-    fg.append(f"[0:v]trim={s}:{e},setpts=PTS-STARTPTS[v{n}];[0:a]atrim={s}:{e},asetpts=PTS-STARTPTS,afade=t=in:d=0.01,afade=t=out:st={max(0,d-0.012):.3f}:d=0.012[a{n}]")
-fg.append("".join(f"[v{n}][a{n}]" for n in range(len(keep)))+f"concat=n={len(keep)}:v=1:a=1[cv][ca]")
-fg.append(f"[cv]setpts=PTS/{SP},fps=24,scale=1080:1920:flags=lanczos,unsharp=5:5:0.6,setsar=1,format=yuv420p[mv]")
-fg.append(f"[ca]atempo={SP},highpass=f=70,aresample=48000[ma]")
+for n,(s0,e0) in enumerate(keep):
+    zf=1.10 if ZOOM[n] else 1.0
+    W,H=int(1080*zf)//2*2,int(1920*zf)//2*2
+    fg.append(f"[0:v]trim={s0:.4f}:{e0:.4f},setpts=PTS-STARTPTS,scale={W}:{H}:flags=lanczos,crop=1080:1920:{(W-1080)//2}:{int((H-1920)*0.25)},fps=24,setsar=1,format=yuv420p,settb=1/24[v{n}];[0:a]atrim={s0:.4f}:{e0:.4f},asetpts=PTS-STARTPTS,aresample=48000[a{n}]")
+vl,al,L="v0","a0",keep[0][1]-keep[0][0]
+for n in range(1,len(keep)):
+    off=L-XF
+    fg.append(f"[{vl}][v{n}]xfade=transition=fade:duration={XF}:offset={off:.4f}[xv{n}];[{al}][a{n}]acrossfade=d={XF}:c1=qsin:c2=qsin[xa{n}]")
+    vl,al=f"xv{n}",f"xa{n}"; L=L-XF+keep[n][1]-keep[n][0]
+fg.append(f"[{vl}]setpts=PTS/{SP},fps=24,unsharp=5:5:0.5,format=yuv420p[mv]")
+IMGS=[("img1.png",59,74),("img2.png",89,121),("img3.png",167,175)]
+ins=[];lab="mv"
+for n,(f,i0,i1) in enumerate(IMGS):
+    if i0 not in widx or i1 not in widx: continue
+    a_=widx[i0]['s']-0.15; b_=widx[i1]['e']+0.25; du=b_-a_
+    ins+=["-loop","1","-framerate","24","-t",f"{du:.3f}","-i",f"{S}/{f}"]
+    k_=len(ins)//8
+    fg.append(f"[{k_}:v]zoompan=z='1+0.0007*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=1080x1920:fps=24,format=yuva420p,fade=t=in:st=0:d=0.2:alpha=1,fade=t=out:st={du-0.2:.3f}:d=0.2:alpha=1,setpts=PTS-STARTPTS+{a_:.3f}/TB[im{n}];[{lab}][im{n}]overlay=eof_action=pass:format=auto[ov{n}]")
+    lab=f"ov{n}"
+fg.append(f"[{lab}]format=yuv420p[mvo]")
+fg.append(f"[{al}]atempo={SP},highpass=f=70,aresample=48000[ma]")
 fg.append(f"color=c=0x121A20:s=1080x1920:r=24:d={CARD},format=yuv420p,setsar=1[cardv];anullsrc=r=48000:cl=mono,atrim=0:{CARD}[carda]")
-fg.append("[mv][ma][cardv][carda]concat=n=2:v=1:a=1[fv][fa0]")
+fg.append("[mvo][ma][cardv][carda]concat=n=2:v=1:a=1[fv][fa0]")
 fg.append(f"[fv]ass={S}/subs_{VER}.ass[outv];[fa0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[outa]")
 open(f"{S}/fg_{VER}.txt","w").write(";\n".join(fg))
-cmd=["ffmpeg","-v","error","-y","-i",SRC,"-filter_complex_script",f"{S}/fg_{VER}.txt","-map","[outv]","-map","[outa]",
+cmd=["ffmpeg","-v","error","-y","-i",SRC,*ins,"-filter_complex_script",f"{S}/fg_{VER}.txt","-map","[outv]","-map","[outa]",
      "-c:v","libx264","-profile:v","high","-preset","slow","-crf","19","-r","24","-pix_fmt","yuv420p",
      "-c:a","aac","-b:a","192k","-ac","2","-movflags","+faststart",OUT]
 subprocess.run(cmd,check=True)

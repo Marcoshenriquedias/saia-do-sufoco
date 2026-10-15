@@ -16,6 +16,7 @@ rem=[(s+0.15,e-0.15) for s,e in sil if e-s>0.3]
 for i,j in cutsW:
     s=snap(ws[i]['s']); e=snap(ws[j+1]['s']) if j+1<len(ws) else D
     if (i,j)==(27,53): e=31.58
+    if (i,j)==(188,189): s=103.84
     rem.append((s,e))
 rem.sort(); m=[]
 for s,e in rem:
